@@ -1,0 +1,13 @@
+# 이미지
+*.png
+*.jpg
+*.jpeg
+
+# 환경 변수
+.env
+
+# 서비스 계정 키
+service-credentials.json
+
+#기타
+.vscode
