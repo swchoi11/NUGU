@@ -18,9 +18,9 @@ class TRANSLATION:
 
 class THUMBNAIL:
     @staticmethod
-    def extract(text: str) -> str:
+    def segment_prompt() -> str:
         """
-        generates prompt for extracting usable thumbnail regions from an image.
+        이미지에서 썸네일로 사용할 수 있는 구간을 추출하는 프롬프트입니다.
 
         :param text: A descriptive prompt or text that provides context or guidance for thumbnail extraction.
         :return: A string containing guidelines to identify vertical segments of an image suitable for thumbnails.
