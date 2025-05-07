@@ -20,3 +20,12 @@ nugu/
     ├── thumbnail/
     └── translation/
 ```
+
+### gemini credentials 설정 방법
+GOOGLE Cloud Console > API 및 서비스 > 사용자 인증 정보 
+
+좌측 상단의 '+ 사용자 인증정보 만들기' > 토글에서 API 키 선택 
+
+생성된 api 키의 제한된 권한 등에 'Generative Language API'가 포함되어 있지 않아야 합니다. 
+
+이후 키 내용을 확인하여 .env 파일에 삽입합니다. 

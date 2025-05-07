@@ -11,3 +11,4 @@ service-credentials.json
 
 #기타
 .vscode
+*.pyc
