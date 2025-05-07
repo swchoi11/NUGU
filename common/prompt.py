@@ -1,19 +1,33 @@
+"""
+ translation, thumbnail 알고리즘 수행에 필요한 prompt 정의
+"""
+
 class TRANSLATION:
 
     @staticmethod
-    def to_japanese(text: str) -> str:
+    def family_instruction()->str:
         """
-        generates a prompt to translate Korean text into Japanese.
+        공손체 (말 끝을 ~です / ~ます 등으로 말하는 가장 기본적인 공손한 말투) → 반말이 아니면 OK
+
+        :return:
+        """
+        return
+
+
+    @staticmethod
+    def to_japanese(text: str, src_lang, target_lang) -> str:
+        """
+        generates a prompt to translate {src_lang} text into {target_lang}.
         
-        :param text: The Korean text to be translated.
-        :return: A string prompt for generating the Japanese translation.
+        :param text: The {src_lang} text to be translated.
+        :return: A string prompt for generating the {target_lang} translation(원본).
         """
 
         return f"""
             {text}
-            Translate the following sentence from Korean to Japanese with high accuracy.
+            Translate the following sentence from {src_lang} to {target_lang} with high accuracy.
             Preserve grammatical correctness and semantic fidelity.
-            Return only the translated Japanese text. No explanations, quotes, or formatting.
+            Return only the translated {target_lang} text. No explanations, quotes, or formatting.
             """
 
 class THUMBNAIL:
