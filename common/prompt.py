@@ -6,13 +6,11 @@ class TRANSLATION:
 
     @staticmethod
     def family_instruction()->str:
-        """
-        공손체 (말 끝을 ~です / ~ます 등으로 말하는 가장 기본적인 공손한 말투) → 반말이 아니면 OK
 
-        :return:
+        return f"""
+            Generates a prompt to translate text from the source language to the target language
+            using polite (non-casual) Japanese speech style (~です / ~ます form).
         """
-        return
-
 
     @staticmethod
     def to_japanese(text: str, src_lang, target_lang) -> str:
@@ -61,3 +59,7 @@ class THUMBNAIL:
                 }
             ]
             """
+
+    @staticmethod
+    def extract_color(text: str) -> str:
+        return print("extract color map")
