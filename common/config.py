@@ -15,8 +15,6 @@ def parser():
     parser.add_argument('--trg_lang', type=str, default='en', help='Target language')
 
     # thumbnail
-    parser.add_argument('--product_code', type=str, required=True, help='Product code')
-    parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[320, 180], help='Thumbnail size [width height]')
+    parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[820, 1024], help='Thumbnail size [width height]')
     parser.add_argument('--select_frame', type=int, default=5, help='Frame selection for thumbnail extraction.')
-
     return parser.parse_args()
