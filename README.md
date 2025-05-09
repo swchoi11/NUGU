@@ -29,3 +29,38 @@ GOOGLE Cloud Console > API 및 서비스 > 사용자 인증 정보
 생성된 api 키의 제한된 권한 등에 'Generative Language API'가 포함되어 있지 않아야 합니다. 
 
 이후 키 내용을 확인하여 .env 파일에 삽입합니다. 
+
+
+# thumbnail work process
+
+process_image
+
+상위 경로에 포함된 모든 이미지에 대해 가장 적합한 썸네일 후보군을 선별하는 과정입니다.
+        1. 이미지 리사이즈 및 윈도우 생성 : rolling_window
+        2. 윈도우 선별 및 크롭 : choose_box
+        3. 분류 : box_classification
+
+        최종 결과물 : 
+        썸네일 후보군이 상위 경로 하위에 분류명으로 저장됩니다. 
+
+        prod123 제품에 대한 최종 결과물 예시 : 
+            resource/thumbnail/
+            └── prod123/
+            │   ├── 연출 이미지/
+            │   │   ├── 모델-연출/
+            │   │   │   ├── prod123_1_box_1.jpg
+            │   │   │   ├── prod123_1_box_2.jpg
+            │   │   │   └── prod123_2_box_3.jpg
+            │   │   └── 상품-연출/
+            │   │       ├── prod123_2_box_8.jpg
+            │   ├── 디테일 이미지/
+            │   │   ├── 누끼/
+            │   │   │   └── prod123_1_box_4.jpg
+            │   │   └── 마네킹/
+            │   │       └── prod123_2_box_2.jpg
+            ├── prod123_1.png
+            ├── prod123_1_resized.png
+            ├── prod123_1_windows.png
+            ├── prod123_2.png
+            ├── prod123_2_resized.png
+            └── prod123_2_windows.png

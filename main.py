@@ -11,14 +11,15 @@
 
 
 import sys
-from thumbnail.thumbnail import Image
+from thumbnail.ThumbnailProcessor import ThumbnailProcessor
 
 if __name__ == "__main__":
 
     sys.argv.extend([
         '--project', 'thumbnail',
-        '--model', 'gemini-2.0-flash-001'
+        '--model', 'gemini-2.0-flash-001',
+        '--select_frame', '5'
     ])
     
-    image = Image('./resource/thumbnail/DGSWKE6166', "png")
-    image.process_image()
+    t_processor = ThumbnailProcessor('./resource/thumbnail/DGSWKE6166')
+    t_processor.process_image(exclude_category=[])

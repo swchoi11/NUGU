@@ -9,6 +9,36 @@ import functools
 # 애플리케이션 로거 이름
 APP_LOGGER_NAME = 'NUGU'
 
+# ANSI 색상 코드
+ANSI_COLORS = {
+    'red': '31',
+    'green': '32',
+    'yellow': '33',
+    'blue': '34',
+    'magenta': '35',
+    'cyan': '36',
+    'white': '37',
+}
+
+class CustomColoredFormatter(ColoredFormatter):
+    def format(self, record):
+        # 함수 이름에 따른 색상 매핑
+        func_colors = {
+            'segment_image': 'cyan',
+            'choose_box': 'yellow',
+            'box_classification': 'blue',
+            'process_image': 'magenta',
+            'timefn': 'white',
+        }
+        
+        # 함수 이름에 색상 적용
+        func_name = record.funcName
+        color = func_colors.get(func_name, 'green')  # 기본값은 파란색
+        color_code = ANSI_COLORS[color]
+        record.funcName = f"\033[{color_code}m{func_name}\033[0m"
+        
+        return super().format(record)
+
 def init_logger(
     log_level=logging.INFO,
     log_format=None
@@ -32,7 +62,7 @@ def init_logger(
             '%(message)s'
         )
 
-    formatter = ColoredFormatter(
+    formatter = CustomColoredFormatter(
         log_format,
         reset=True,
         log_colors={
