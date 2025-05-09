@@ -64,7 +64,7 @@ def is_initialized(logger_name):
 
 def timefn(fn):
     """
-    함수의 실행 시간을 측정하고 로깅하는 데코레이터입니다.
+        함수의 실행 시간을 측정하고 로깅하는 데코레이터입니다.
     """
 
     @functools.wraps(fn)

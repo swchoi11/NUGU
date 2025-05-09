@@ -18,7 +18,7 @@ def parser():
     vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
 
     ## common arguments
-    parser.add_argument('--project', type=str, default="translation", choices=['translation', 'thumbnail', 'visionAnalyser'],
+    parser.add_argument('--project', type=str, default="thumbnail", choices=['translation', 'thumbnail', 'visionAnalyser'],
                         help='choose the project type: [translation, thumbnail, visionAnalyser]')
     parser.add_argument('--input_dir', type=str, default='../resource', help='path to resource directory')
     parser.add_argument('--output_dir', type=str, default='../output', help='path to output directory')
