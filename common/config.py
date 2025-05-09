@@ -37,7 +37,7 @@ def parser():
         parser.add_argument('--enhance_quality', type=bool, default=False, required=False, help='enhance image quality')
 
     if args.project == 'thumbnail':
-        parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[820, 1024], help='Thumbnail size [width height]')
+        parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[1024, 820], help='Thumbnail size [height, width]')
         parser.add_argument('--select_frame_min', type=int, default=5, help='Frame selection for minimum thumbnail extraction')
         parser.add_argument('--select_frame_max', type=int, default=10)
 
