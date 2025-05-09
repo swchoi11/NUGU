@@ -1,7 +1,9 @@
 """
  translation, thumbnail 알고리즘 수행에 필요한 prompt 정의
 """
-from common.utils import valid_category
+from common.utils import is_valid
+
+
 class TRANSLATION:
 
     @staticmethod
@@ -28,6 +30,7 @@ class TRANSLATION:
             Return only the translated {target_lang} text. No explanations, quotes, or formatting.
             """
 
+
 class THUMBNAIL:
 
     @staticmethod
@@ -39,9 +42,9 @@ class THUMBNAIL:
             이미지를 보고 썸네일로 사용할 수 있는 구간을 추출해주세요.
 
             썸네일로 사용할 수 있는 구간을 평가하는 기준은 다음과 같습니다.
-            * 모델이 이미지에 포함되어 있는 경우
-               * 모델이 이미지의 중앙에 위치하는 이미지
-            * 모델이 이미지에 포함되어 있지 않은 경우
+            * 사람이 이미지에 포함되어 있는 경우
+               * 사람이 이미지의 중앙에 위치하는 이미지
+            * 사람이 이미지에 포함되어 있지 않은 경우
                * 상품이 이미지의 중앙에 위치하는 이미지
                * 텍스트나 표가 포함되지 않는 이미지
                * 배경이 흰색이나 단색 등 스튜디오에서 찍히지 않은 이미지
@@ -49,8 +52,9 @@ class THUMBNAIL:
             썸네일로 사용할 수 있다고 판단되는 경우 두가지 카테고리 중 하나로 분류해 주세요.
             분류 기준은 다음과 같습니다.
             < 분류 기준 >
-            - 연출 이미지: 모델, 배경과 연출 요소가 포함된 이미지
-            - 디테일 이미지: 제품의 질감, 소재, 부분 확대 등 세부 정보를 중심으로 한 이미지
+            - 연출 이미지: 사람, 야외, 실내 등의 배경과 연출 요소가 포함된 이미지
+                         또는 단색으로 꾸며신 스튜디오에서 사람을 찍은 이미지
+            - 디테일 이미지: 사람이 포함되지 않고, 오직 제품의 질감, 소재, 부분 확대 등 세부 정보를 중심으로 한 이미지
 
             분류는 배타적으로 진행해야 합니다. 
             즉, 연출 이미지는 디테일 이미지가 아니고, 디테일 이미지는 연출 이미지가 아닙니다.
@@ -73,7 +77,7 @@ class THUMBNAIL:
 
     @staticmethod
     def classification_studio_prompt(include_category: list) -> str:
-        if not valid_category(include_category):
+        if not is_valid(include_category):
             raise ValueError("Invalid category")
 
         return f"""
@@ -85,7 +89,7 @@ class THUMBNAIL:
 
     @staticmethod
     def classification_detail_prompt(include_category: list) -> str:
-        if not valid_category(include_category):
+        if not is_valid(include_category):
             raise ValueError("Invalid category")
 
         return f"""

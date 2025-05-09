@@ -15,6 +15,7 @@ from common.config import parser
 from common.utils import valid_category
 from segment import ImageSegmentor
 
+
 class ImageProcessor(ImageSegmentor):
 
     def __init__(self):
@@ -25,12 +26,11 @@ class ImageProcessor(ImageSegmentor):
         # logger 초기화
         self.logger = init_logger()
 
-        ## set variable
+        # set variable
         self.studio_category = ['모델-스튜디오', '모델-연출', '상품-연출']
         self.detail_category = ['누끼', '마네킹', '옷걸이(행거)이미지', '상품소재디테일이미지']
         self.studio_output_dir = os.path.join(self.args.output_dir, self.args.project, '연출 이미지')
         self.detail_output_dir = os.path.join(self.args.output_dir, self.args.project, '디테일 이미지')
-
 
     def read_images(self, extensions=['jpg', 'jpeg', 'png'])->list:
         root_dir = os.path.join(self.args.input_dir, self.args.project)
@@ -45,11 +45,9 @@ class ImageProcessor(ImageSegmentor):
             구간 추출 이미지 중 썸네일로 사용할 수 있도록 객체가 중앙에 오는 이미지 선별 및 1차 분류 진행
         """
         prompt = THUMBNAIL.choose_box_prompt()
-        index = os.path.basename(image_path).split("_")[1].split(".")[0]
-        ext = os.path.basename(image_path).split(".")[-1]
 
-        image = self.client.files.upload(file=f'{self.images_path}/{self.code}_{index}_windows.{ext}')
-        self.logger.info(f"이미지 api에 업로드 : {self.images_path}/{self.code}_{index}_windows.{ext}")
+        image = self.client.files.upload(file=f'{self.segment_dir}/{self.filename}')
+        self.logger.info(f"이미지 api에 업로드 : {self.segment_dir}/{self.filename}")
 
         response_schema = {
             "type": "array",
@@ -85,17 +83,17 @@ class ImageProcessor(ImageSegmentor):
             box_info = box_rows.get(selected_box['box'])
             if box_info:
                 # 이미지 크롭
-                img = cv2.imread(f'{self.images_path}/{self.code}_{index}_resized.{ext}')
+                img = cv2.imread(f'{self.resize_dir}/{self.filename}')
                 cropped = img[box_info['y1']:box_info['y2'], :]
 
                 # 저장
-                os.makedirs(f'{self.images_path}/{selected_box["category"]}', exist_ok=True)
-                thumbnail_path = f'{self.images_path}/{selected_box["category"]}/{self.code}_{index}_{selected_box["box"]}.{ext}'
+                os.makedirs(f'{self.root_dir}/{selected_box["category"]}', exist_ok=True)
+                thumbnail_path = f'{self.root_dir}/{selected_box["category"]}/{selected_box["box"]}_{self.filename}'
                 cv2.imwrite(thumbnail_path, cropped)
                 self.logger.info(f" 저장 완료: {thumbnail_path}")
 
-        os.remove(f'{self.images_path}/{self.code}_{index}_windows.{ext}')
-        os.remove(f'{self.images_path}/{self.code}_{index}_resized.{ext}')
+        os.remove(f'{self.segment_dir}/{self.filename}')
+        os.remove(f'{self.resize_dir}/{self.filename}')
 
         return result
 
@@ -123,10 +121,10 @@ class ImageProcessor(ImageSegmentor):
             category = response.text.strip()
             if category in include_category:
                 # 카테고리 폴더 생성
-                os.makedirs(f'{self.images_path}/연출 이미지/{category}', exist_ok=True)
+                os.makedirs(f'{self.root_dir}/연출 이미지/{category}', exist_ok=True)
 
                 # 이미지 이동
-                new_path = f'{self.images_path}/연출 이미지/{category}/{os.path.basename(s_img)}'
+                new_path = f'{self.root_dir}/연출 이미지/{category}/{os.path.basename(s_img)}'
                 os.rename(s_img, new_path)
                 self.logger.info(f"이미지 이동 완료: {s_img} -> {new_path}")
 
@@ -177,6 +175,9 @@ class ImageProcessor(ImageSegmentor):
         """
         image_list = self.read_images()
         for image_path in image_list:
+            product_code = self.extract_product_code(image_path)
+            self.root_dir = os.path.join(self.args.output_dir, self.args.project, product_code)
+
             # 1. 이미지에 포함된 객체가 가장 잘 포함되는 구간을 나누기
             self.logger.info(f"이미지 리사이즈 및 객체 선별을 통한 세그먼트 생성을 시작합니다. : {image_path}")
             box_rows = self.segment_image(image_path)
@@ -189,7 +190,7 @@ class ImageProcessor(ImageSegmentor):
 
             # 3. 1차 분류된 구간을 대상으로 2차 분류하기
             self.logger.info(f"2차 분류를 시작합니다. : {image_path}")
-            self.box_classification(self.exclude_category)
+            self.box_classification(self.args.exclude_category)
 
             # 4. 2차 분류된 구간에 대한 우선순위선정 및 최소 썸네일 개수를 바탕으로 한 최종 썸네일 선택
             self.select_thumbnail()

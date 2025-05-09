@@ -4,25 +4,24 @@ import random
 import numpy as np
 from common.config import parser
 
+
 class ImageSegmentor:
     def __init__(self):
         self.args = parser()
-        self.segment_dir = os.path.join(self.args.output_dir, self.args.project, 'raw' )
-        os.makedirs(self.segment_dir, exist_ok=True)
+        self.is_visual = False
 
-    @property
-    def extract_product_code(self, image_path: list):
+    def extract_product_code(self, image_path):
         """
             이미지의 상위 폴더명을 기반으로 제품 코드를 추출 합니다.
             향후 제품 코드 명 규칙이 변경될 경우, 해당 로직을 수정해야 합니다.
         """
-        return os.path.dirname(image_path).split("//")[-1]
+        return os.path.dirname(image_path).split("/")[-1]
 
     def resize_image(self, image_path):
         """
            이미지를 self.args.thumbnail_size 비율에 맞춰 리사이즈 합니다.
         """
-        product_code = self.extract_product_code(image_path)
+        self.product_code = self.extract_product_code(image_path)
         filename = os.path.basename(image_path)
 
         image = cv2.imread(image_path)
@@ -39,10 +38,10 @@ class ImageSegmentor:
 
         if self.args.debug:
             # 리사이즈 이미지 저장
-            temp_dir = f'./resize/{product_code}'
-            os.makedirs(temp_dir, exist_ok=True)
-            cv2.imwrite(os.path.join(temp_dir, filename), resized_image)
-            self.logger.info(f"리사이즈 이미지 저장 완료 : {os.path.join(temp_dir, filename)}")
+            self.resize_dir = f'{self.root_dir}/resize'
+            os.makedirs(self.resize_dir, exist_ok=True)
+            cv2.imwrite(os.path.join(self.resize_dir, filename), resized_image)
+            self.logger.info(f"리사이즈 이미지 저장 완료 : {os.path.join(self.resize_dir, filename)}")
 
         return resized_image
 
@@ -170,9 +169,9 @@ class ImageSegmentor:
 
         return segments, valid_boundaries, image, rows
 
-    def run(self, image_path :str):
+    def segment_image(self, image_path:str):
 
-        filename = os.path.basename(image_path)
+        self.filename = os.path.basename(image_path)
         resized_image = self.resize_image(image_path)
         display_image = resized_image.copy()
 
@@ -194,8 +193,9 @@ class ImageSegmentor:
 
         # 세그먼트 생성
         segments, valid_boundaries, image, rows = self._create_segments(resized_image, valid_boundaries)
-        if self.args.debug:
-            self.visualize(image, valid_boundaries, segments) # 세그먼트 중간 결과물 확인
+        if self.is_visual:
+            # 세그먼트 중간 결과물 확인
+            self.visualize(image, valid_boundaries, segments)
 
         if not segments:
             self.logger.info("분할 가능한 세그먼트가 없습니다. 원본 이미지를 그대로 반환 합니다.")
@@ -209,8 +209,11 @@ class ImageSegmentor:
             cv2.putText(window_image, f'{box_id}', (0, box_info['y2']), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                         box_info['color'], 2)
 
-        cv2.imwrite(f'{self.segment_dir}/{filename}', window_image)
-        self.logger.info(f"윈도우 이미지 저장 완료 : {self.segment_dir}/{filename}")
+        self.segment_dir = f'{self.root_dir}/window'
+        os.makedirs(self.segment_dir, exist_ok=True)
+
+        cv2.imwrite(f'{self.segment_dir}/{self.filename}', window_image)
+        self.logger.info(f"윈도우 이미지 저장 완료 : {self.segment_dir}/{self.filename}")
 
         return rows
 

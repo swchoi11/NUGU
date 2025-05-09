@@ -38,12 +38,9 @@ def parser():
 
     if args.project == 'thumbnail':
         parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[1024, 820], help='Thumbnail size [height, width]')
-        parser.add_argument('--select_frame_min', type=int, default=5, help='Frame selection for minimum thumbnail extraction')
-        parser.add_argument('--select_frame_max', type=int, default=10)
-
-        parser.add_argument('--exclude_type', type=str, default= ['마네킹 착장 이미지'],
-                            choices=['모델-스튜디오','모델-연출','상품-연출', '누끼 이미지', '마네킹 착장 이미지', '옷걸이(행거) 이미지', '상품 소재 디테일 이미지'],
-                            help='exclude category type')
+        parser.add_argument('--select_frame', type=int, default=5, help='Frame selection for minimum thumbnail extraction')
+        parser.add_argument('--exclude_category', type=str, default=[],
+                            help=['모델-스튜디오','모델-연출','상품-연출', '누끼 이미지', '마네킹 착장 이미지', '옷걸이(행거) 이미지', '상품 소재 디테일 이미지'])
         ## option
         parser.add_argument('--remove_background', type=bool, default=False, required=False,
                             help='remove background(누끼 이미지 생성)')
