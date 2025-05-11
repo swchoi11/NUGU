@@ -18,7 +18,7 @@ def parser():
     vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
 
     ## common arguments
-    parser.add_argument('--project', type=str, default="thumbnail", choices=['translation', 'thumbnail', 'visionAnalyser'],
+    parser.add_argument('--project', type=str, default="translation", choices=['translation', 'thumbnail', 'visionAnalyser'],
                         help='choose the project type: [translation, thumbnail, visionAnalyser]')
     parser.add_argument('--input_dir', type=str, default='../resource', help='path to resource directory')
     parser.add_argument('--output_dir', type=str, default='../output', help='path to output directory')
@@ -29,10 +29,12 @@ def parser():
     args, _ = parser.parse_known_args()
 
     if args.project == 'translation':
-        parser.add_argument('--src_lang', type=str, default='ko', help='source language')
-        parser.add_argument('--trg_lang', type=str, default='jp', help='target language')
-        parser.add_argument('--font-family', type=str, default="../resource/font/FZPahyamarukana.otf", help='font family')
-        parser.add_argument('--text_size_ratio', type=float, default=0.3, help='text size ratio')
+        parser.add_argument('--src_lang', type=str, nargs=2, default=['ko', 'en'], help='source language')
+        parser.add_argument('--trg_lang', type=str, default=['jp'], help='target language')
+        parser.add_argument('--font-family', type=str, default="../resource/font/NotoSansJP-Regular.ttf", help='font family')
+        parser.add_argument('--text_size_ratio', type=float, default=0.7, help='text size ratio')
+        parser.add_argument('--text_padding', type=int, default=5, help='text background padding')
+
         ## option
         parser.add_argument('--enhance_quality', type=bool, default=False, required=False, help='enhance image quality')
 
