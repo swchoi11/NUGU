@@ -13,3 +13,4 @@ service-credentials.json
 .vscode
 *.pyc
 old.py
+.venv

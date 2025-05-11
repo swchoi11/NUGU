@@ -37,6 +37,7 @@ class ThumbnailProcessor:
         self.image_list = []
         for ext in ['jpg','jpeg','png']:
             self.image_list.extend(glob.glob(images_path + f"/*.{ext}"))
+        print(self.image_list)
 
         # 제품 코드 
         if "(" in os.path.basename(images_path):
@@ -134,6 +135,7 @@ class ThumbnailProcessor:
         for selected_box in result:
             box_info = box_rows.get(selected_box['box'])
             if box_info:
+                print(box_info)
                 # 이미지 크롭
                 img = cv2.imread(f'{self.images_path}/{self.code}_{index}_resized.{ext}')
                 cropped = img[box_info['y1']:box_info['y2'], :]
