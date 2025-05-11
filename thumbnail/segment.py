@@ -29,7 +29,7 @@ class ImageSegmentor:
         thumb_height, thumb_width = self.args.thumbnail_size
 
         # 리사이즈 비율 계산
-        resize_ratio = width / thumb_width
+        resize_ratio = thumb_width / width
         resized_height = int(height * resize_ratio)
 
         # 이미지 리사이즈

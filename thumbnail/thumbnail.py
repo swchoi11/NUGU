@@ -29,8 +29,6 @@ class ImageProcessor(ImageSegmentor):
         # set variable
         self.studio_category = ['모델-스튜디오', '모델-연출', '상품-연출']
         self.detail_category = ['누끼', '마네킹', '옷걸이(행거)이미지', '상품소재디테일이미지']
-        self.studio_output_dir = os.path.join(self.args.output_dir, self.args.project, '연출 이미지')
-        self.detail_output_dir = os.path.join(self.args.output_dir, self.args.project, '디테일 이미지')
 
     def read_images(self, extensions=['jpg', 'jpeg', 'png'])->list:
         root_dir = os.path.join(self.args.input_dir, self.args.project)
@@ -101,6 +99,8 @@ class ImageProcessor(ImageSegmentor):
         """
             선별된 윈도우에 대한 2차 분류 진행
         """
+        self.studio_output_dir = os.path.join(self.args.output_dir, self.args.project, self.product_code, '연출 이미지')
+        self.detail_output_dir = os.path.join(self.args.output_dir, self.args.project, self.product_code, '디테일 이미지')
 
         # 연출 이미지에 대한 분류
         studio_images = glob.glob(f'{self.studio_output_dir}/*.*')
