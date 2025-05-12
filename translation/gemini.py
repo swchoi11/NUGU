@@ -11,7 +11,6 @@ prompt = TRANSLATION()
 args = parser()
 client = genai.Client(api_key=args.api_key)
 
-
 def generate_response(query: str, model_name: str = "gemini-2.0-flash-001"):
 
     response = client.models.generate_content(

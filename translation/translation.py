@@ -218,8 +218,7 @@ class Translation:
             adjusted_bboxes.append(adjusted_bbox)
 
         # 원본 이미지 크기에 맞게 조정된 바운딩 박스 사용
-        if False:
-        # if self.args.debug and image is not None and adjusted_bboxes:
+        if self.args.debug and image is not None and adjusted_bboxes:
             image_with_boxes = image.copy()
 
             # 각 바운딩 박스에 인덱스 번호 표시를 위한 폰트 설정
@@ -307,10 +306,6 @@ class Translation:
         cv2.fillPoly(mask, [points], 255)
 
         inpainted_image = cv2.inpaint(image, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
-        if self.args.debug:
-            inpaint_dir = os.path.join(self.output_dir, 'inpaint')
-            os.makedirs(inpaint_dir, exist_ok=True)
-            cv2.imwrite(f"{inpaint_dir}/{self.filename}.png", inpainted_image)
         return inpainted_image
 
     def add_text_to_image(self, image, bbox, text):
