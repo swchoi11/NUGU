@@ -22,6 +22,7 @@ class VisionAnalyzer:
         return image_list
 
     def product_category(self, image):
+        fm.PRODUCT_CATEGORY
         return print("product_category")
 
     def product_attributes(self, image):
@@ -35,9 +36,9 @@ class VisionAnalyzer:
 
     def run(self):
         image_list = self.read_images()
-        rows = {}
+        rows = []
         for image_path in image_list:
-            product_code = os.path.dirname(image_path).split('//')[-1]
+            product_code = os.path.basename(os.path.dirname(image_path))
             filename = os.path.basename(image_path)
             image = cv2.imread(image_path)
             print(image_path)
@@ -49,12 +50,7 @@ class VisionAnalyzer:
                 "mode_and_style":   self.mode_and_style(image),
                 "target_user":      self.target_user(image),
             }
-
+            rows.append(row)
         df = pd.DataFrame(rows, columns=self.columns)
         df.to_excel(f"./visionAnalyzer.xlsx", index=False)
         return print("run")
-
-
-
-
-
