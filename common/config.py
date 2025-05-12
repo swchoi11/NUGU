@@ -10,10 +10,10 @@ def parser():
     ## vertex ai parm
     parser = argparse.ArgumentParser(description="NUGU")
     parser.add_argument('--project_id', type=str, default=os.getenv("PROJECT_ID"), help='vertex ai project name')
-    parser.add_argument('--bucket_name', type=str, default=os.getenv("BUCKET_NAME"), help='bucket name')
-    parser.add_argument('--credentials', type=str,
-                        default=service_account.Credentials.from_service_account_file(os.getenv("CREDENTIALS")),
-                        help='google vertex ai credentials')
+    # parser.add_argument('--bucket_name', type=str, default=os.getenv("BUCKET_NAME"), help='bucket name')
+    # parser.add_argument('--credentials', type=str,
+    #                     default=service_account.Credentials.from_service_account_file(os.getenv("CREDENTIALS")),
+    #                     help='google vertex ai credentials')
     parser.add_argument('--api_key', type=str, default=os.getenv("API_KEY"), help='gemini api key')
     vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
 
@@ -41,7 +41,7 @@ def parser():
     if args.project == 'thumbnail':
         parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[1024, 820], help='Thumbnail size [height, width]')
         parser.add_argument('--select_frame', type=int, default=5, help='Frame selection for minimum thumbnail extraction')
-        parser.add_argument('--exclude_category', type=str, default=[],
+        parser.add_argument('--exclude_category', type=list, default=[],
                             help=['모델-스튜디오','모델-연출','상품-연출', '누끼 이미지', '마네킹 착장 이미지', '옷걸이(행거) 이미지', '상품 소재 디테일 이미지'])
         ## option
         parser.add_argument('--remove_background', type=bool, default=False, required=False,
