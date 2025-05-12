@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from google.oauth2 import service_account
 import vertexai
 
+CATEGORY_LIST = ['모델-스튜디오', '모델-연출', '상품-연출', '누끼', '마네킹', '옷걸이이미지', '상품소재디테일이미지']
 def parser():
     load_dotenv()
 
@@ -16,9 +17,11 @@ def parser():
     #                     help='google vertex ai credentials')
     parser.add_argument('--api_key', type=str, default=os.getenv("API_KEY"), help='gemini api key')
     vertexai.init(project=os.getenv("PROJECT_ID"), location="us-central1")
+    parser.add_argument('--max_retries', type=int, default= 5, help='Maximum number of retry attempts for Gemini API')
+    parser.add_argument('--initial_delay', type=int, default= 1, help='Initial delay (in seconds) before the first retry attempt')
 
     ## common arguments
-    parser.add_argument('--project', type=str, default="translation", choices=['translation', 'thumbnail', 'visionAnalyser'],
+    parser.add_argument('--project', type=str, default="thumbnail", choices=['translation', 'thumbnail', 'visionAnalyser'],
                         help='choose the project type: [translation, thumbnail, visionAnalyser]')
     parser.add_argument('--input_dir', type=str, default='../resource', help='path to resource directory')
     parser.add_argument('--output_dir', type=str, default='../output', help='path to output directory')
@@ -39,10 +42,12 @@ def parser():
         parser.add_argument('--enhance_quality', type=bool, default=False, required=False, help='enhance image quality')
 
     if args.project == 'thumbnail':
+        parser.add_argument('--is_visual', type=bool, default=False, help='imshow segment image')
         parser.add_argument('--thumbnail_size', type=int, nargs=2, default=[1024, 820], help='Thumbnail size [height, width]')
-        parser.add_argument('--select_frame', type=int, default=5, help='Frame selection for minimum thumbnail extraction')
-        parser.add_argument('--exclude_category', type=list, default=[],
-                            help=['모델-스튜디오','모델-연출','상품-연출', '누끼 이미지', '마네킹 착장 이미지', '옷걸이(행거) 이미지', '상품 소재 디테일 이미지'])
+        parser.add_argument('--select_frame', type=int, default=5, help='Frame selection for maximum thumbnail extraction')
+        parser.add_argument('--define_category', type=list, nargs="*", default = CATEGORY_LIST, help='List of categories to list')
+        parser.add_argument('--exclude_category', type=list, nargs="*", choices = CATEGORY_LIST, default= [], help='Categories to exclude from the defined list')
+
         ## option
         parser.add_argument('--remove_background', type=bool, default=False, required=False,
                             help='remove background(누끼 이미지 생성)')
@@ -54,5 +59,3 @@ def parser():
         parser.add_argument('--target_user', type=bool, default=False, help='')
 
     return parser.parse_args()
-
-
