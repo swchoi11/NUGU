@@ -2,6 +2,10 @@
 Thumbnail Algorithm (예시)
 
  - 작성자: 최서우
+    ** 이슈 사항 **
+        gemini API 호출 시 과부하로 인해 간헐적으로 503 오류가 발생할 수 있습니다.
+        해당 이슈는 config.py > --max_retries(default:5), --initial_delay(default:1) 통해 지연 시간 및 재시도 횟수를 설정하여
+        일시적으로 회피해 놓은 상태입니다.
 
     1. 이미지 분류
       1-1.1차 분류
@@ -19,16 +23,6 @@ Thumbnail Algorithm (예시)
     3. 썸네일 이미지 생성
       3-1. 추출된 프레임은 지정된 해상도(default: 820X1204)에 맞춰 리사이즈 또는 크롭 처리 됩니다.
       3-2. 썸네일 추출 개수를 정의 합니다.(default: select_frame=5)
-    4. (옵션) 썸네일 Mood 및 Color Palette 분석
-      4-1. Mood 분석
-        색감, 대비, 채도, 명도 등의 요소를 바탕으로 이미지의 정서적 분위기(예: 따뜻함, 차가움, 모던함 등)
-      4-2 Color Palette 추출
-        주요 색상 정보를 기반으로 대표 색상군을 도출( default: config.py > primary color map 참고)
-        {
-            Primary / Secondary Color
-            Dominant Color Ratio
-            Web-safe palette로 변환 가능 옵션 포함
-        }
 
  (option) visionAnalyzer
  - 작성자: 류한나
